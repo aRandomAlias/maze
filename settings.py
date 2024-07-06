@@ -8,7 +8,7 @@ class Settings():
 		self.maze_col = 30
 		self.screen_bg = (200,200,200)
 		self.wall_color = (0,0,0)
-		# make sure its a even number or it get fucked up
+		# make sure its a even number
 		self.player_size = 14
 		self.player_start = 50
 		self.FPS = 10
