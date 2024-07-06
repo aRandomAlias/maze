@@ -723,8 +723,8 @@ def new_cpos(maze_tracker, settings):
 			
 	
 	return maze_len
-#create walls for dead in 
-# CRTL SHIFT C copys current line
+#create walls for dead end
+
 def create_walls(settings, choosen_path, prev_path, connect_it, connect_Flag):
 	walls = [0,1,2,3]
 	
