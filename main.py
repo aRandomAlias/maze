@@ -68,16 +68,16 @@ async def main():
 		visited_path = []
 	
 		recursion_visited = []
-		
-		#print(maze_tracker)
-		#print(wall_tracker)
-	
+
 
 		while game_active:
 			
+			
+				
 			dummy_array, settings.maze_tracker = gf.event_check(settings, screen, player, dummy_array, new_game_button, stats, 
 													   settings.maze_tracker, paused_game_button, auto_game_button, recursion_button,
 														easy_button, medium_button, hard_button, extreme_button)
+			
 			
 			screen.fill(settings.screen_bg)
 			if stats.new_game == True:
@@ -95,6 +95,9 @@ async def main():
 				
 			
 			gf.draw_walls(settings, screen, dummy_array)
+			gf.draw_player_trail(player, screen)
+
+			
 			player.draw_player()	
 			if not stats.game_win and not stats.paused and not stats.auto and not stats.recursion:	
 				gf.move_player(settings, player, dummy_array, stats)	
@@ -123,15 +126,6 @@ async def main():
 							
 						stats.recursion_path = gf.do_recursion(settings, stats, dummy_array, stats.recursion_path, player.current_position, recursion_visited)
 						stats.recursion_flag = False
-						"""
-						print()
-
-						print()
-						print()
-						print("I GOT HERE")
-						
-						print("THE SOULTION: " + str(stats.recursion_path))
-						"""
 						
 					except:
 						stats.recursion = False
@@ -153,11 +147,6 @@ async def main():
 					stats.show_error()
 					pygame.display.flip()
 					time.sleep(2)			
-				
-				
-				#print("PREVIOUS: " + str(previous))
-				#print("CURRENT: " + str(current))
-				
 				
 				
 			stats.prep_dir()
@@ -194,6 +183,8 @@ async def main():
 				stats.prep_win()
 				stats.show_win()
 			
+			
+	
 			#pygame.display.update can update the whole screen as well if there are no paraments
 			#allows to update a portion of the screen, instead of the entire area of the screen
 			pygame.display.flip()
@@ -212,6 +203,7 @@ async def main():
 
 	start_game()
 	await asyncio.sleep(0)
+
 
 asyncio.run(main())
 	
