@@ -26,30 +26,15 @@ def move_the_player(settings, recursion_path, player, stats, dummy_array, curren
 		player.up = False
 	
 def do_recursion(settings, stats, dummy_array, recursion_path, position, visited_path):
-
-	
-	#print("POSITION: " + str(position))
 	if position not in visited_path:	
 		visited_path.append(position)
 	if position not in recursion_path:
 		recursion_path.append(position)
 	
 	possible_path = backtrack_path(settings, dummy_array, position, visited_path)
-	#print("POSSIBLE PATH: " + str(possible_path))
-	#print(recursion_path)
-	
 
-	
-	
 	if len(possible_path) != 0 and position != settings.last_position:
-		#print("NEW POSITIOn: " + str(position))
 		the_walk = get_random_walk(possible_path)
-		#print("WALK: " + str(the_walk))
-		
-		#print("SOLUTION: " + str(recursion_path))
-		#print()
-		#print()
-		
 
 		if the_walk == 0:
 			position = position - 1
@@ -59,7 +44,7 @@ def do_recursion(settings, stats, dummy_array, recursion_path, position, visited
 			position = position + 1
 		elif the_walk == 3:
 			position = position + settings.maze_row
-		#print("IM HERE")	
+
 		recursion_path = do_recursion(settings, stats, dummy_array, recursion_path, position, visited_path)
 
 		return recursion_path
@@ -75,12 +60,6 @@ def do_recursion(settings, stats, dummy_array, recursion_path, position, visited
 		recursion_path = do_recursion(settings, stats, dummy_array, recursion_path, position, visited_path)
 		return recursion_path
 
-	
-	
-	
-	
-	
-	
 	return recursion_path
 
 def do_backtrack(settings, stats, dummy_array, player, solution_path, visited_path):
@@ -206,6 +185,7 @@ def button_clicked(settings, screen, player, dummy_array, new_game_button, mouse
 def reset_game(settings, screen, player, dummy_array, stats, maze_tracker):
 	
 	del dummy_array[:]
+	del player.player_trail[:]
 	
 	
 	if settings.easy == True:
@@ -253,14 +233,6 @@ def reset_game(settings, screen, player, dummy_array, stats, maze_tracker):
 	stats.recursion_flag = True
 	stats.new_game = True
 	
-
-	"""
-	print(maze_tracker)
-	print()
-	print()
-	print()
-	print()
-	"""
 	return dummy_array, settings.maze_tracker
 	
 
@@ -340,7 +312,8 @@ def event_check(settings, screen, player, dummy_array, new_game_button, stats, m
 			
 		elif event.type == pygame.KEYDOWN and stats.auto == False and stats.recursion == False:
 			if event.key == pygame.K_RIGHT:	
-				player.right = True			
+				player.right = True
+							
 				
 			elif event.key == pygame.K_DOWN:	
 				player.down = True
@@ -349,7 +322,9 @@ def event_check(settings, screen, player, dummy_array, new_game_button, stats, m
 				player.left = True
 
 			elif event.key == pygame.K_UP:	
-				player.up = True				
+				player.up = True			
+
+			
 			
 		elif event.type == pygame.KEYUP and stats.auto == False and stats.recursion == False:
 			if event.key == pygame.K_RIGHT:
@@ -390,9 +365,12 @@ def draw_walls(settings, screen, dummy_array):
 			col_flag = 0
 			start_col = (settings.player_start - (settings.player_size/4))
 			
-			
+def draw_player_trail(player, screen):
 
-			
+	for i in player.player_trail:
+		pygame.draw.circle(screen, 'red', (i[0], i[1]), 3)
+
+
 def generate_corners(settings, dummy_array, maze_tracker):
 	wall_tracker = []
 	for row in range(settings.maze_row):
@@ -480,15 +458,11 @@ def generate_maze(settings, dummy_array, wall_tracker, maze_tracker):
 			# open wall so that it connects the paths
 			dummy_array, connect_it = connect_path(settings, dummy_array, c_pos, maze_tracker, wall_tracker)
 			connect_Flag = True
-			#print("PREV: " +str(connect_it))
-			
-			
+
 			continue
 		# choose the random path
 		choosen_path = get_random_walk(possible_path)
-		#print("PREV PATH: " + str(prev_path))
-		#print("Connect IT: " + str(connect_it))
-		#print("Choosen_path: " + str(choosen_path))
+
 		connect_it == -1
 		# create walls for c_pos and leave choosen_path open
 		dummy_array[c_pos] = create_walls(settings, choosen_path, prev_path, connect_it, connect_Flag)
@@ -511,9 +485,7 @@ def generate_maze(settings, dummy_array, wall_tracker, maze_tracker):
 			remains = check_remaining(maze_tracker)
 			if remains: 				
 				continue
-				
-				
-				
+			
 			no_solution = False
 		
 	
@@ -672,8 +644,7 @@ def connect_path(settings, dummy_array, c_pos, maze_tracker, wall_tracker):
 	
 
 	remove_path = get_random_walk(removal_path)
-	#print("Removing: " + str(remove_path))
-	
+
 	if remove_path == 0:
 		dummy_array[c_pos-1].remove(2)
 	elif remove_path == 1:
@@ -723,8 +694,8 @@ def new_cpos(maze_tracker, settings):
 			
 	
 	return maze_len
-#create walls for dead end
-
+	
+#create walls for dead in 
 def create_walls(settings, choosen_path, prev_path, connect_it, connect_Flag):
 	walls = [0,1,2,3]
 	
@@ -752,11 +723,7 @@ def create_walls(settings, choosen_path, prev_path, connect_it, connect_Flag):
 			walls.remove(2)
 		elif connect_it == 3 and 3 in walls:
 			walls.remove(3)
-		
 
-	#print("walls: " + str(walls))
-	
-	
 	return walls
 	
 def possible_paths(settings, c_pos, dummy_array, wall_tracker, maze_tracker):
@@ -835,15 +802,12 @@ def possible_paths(settings, c_pos, dummy_array, wall_tracker, maze_tracker):
 			paths.remove(3)
 		if maze_tracker[c_pos-settings.maze_row] == 1:
 			paths.remove(1)
-	
-	#print("path list:" + " " + str(paths))
-	
+
 	return paths
 	
 
 def get_random_walk(path_list):
 	the_walk = random.choice(path_list)
-	#print("walk: " + str(the_walk))
 	return the_walk
 
 
@@ -857,6 +821,5 @@ def update_cpos(settings, c_pos, random_walk):
 	elif random_walk == 3:
 		c_pos += settings.maze_col
 	
-	#print("position: " + str(c_pos))
 	return c_pos
 
