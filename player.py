@@ -28,10 +28,14 @@ class Player():
 									self.move * (self.settings.maze_row-1) +  self.settings.player_start,
 									self.settings.player_size, self.settings.player_size) 
 		
+		
+		self.player_trail = []
+		
 	def update_player(self):
 
-		# update player position based on keys pressed
+		
 		if self.up and self.wall_up:
+			
 			self.rect.top -= self.move
 			self.wall_flag = self.wall_flag - self.settings.maze_col
 			self.stats.moves += 1
@@ -67,7 +71,7 @@ class Player():
 		self.wall_left = True
 		self.wall_up = True
 		self.wall_down = True
-		
+		self.player_trail.append([self.rect.centerx, self.rect.centery])
 		
 		
 	def draw_player(self):
